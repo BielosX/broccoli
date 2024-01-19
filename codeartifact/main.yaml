@@ -1,0 +1,43 @@
+Resources:
+  Domain:
+    Type: AWS::CodeArtifact::Domain
+    Properties:
+      DomainName: "broccoli"
+  GradlePluginsMirror:
+    Type: AWS::CodeArtifact::Repository
+    Properties:
+      Description: "Gradle Plugins Mirror"
+      DomainName: !GetAtt Domain.Name
+      RepositoryName: "gradle-plugins-mirror"
+      ExternalConnections:
+        - "public:maven-gradleplugins"
+  MavenMirror:
+    Type: AWS::CodeArtifact::Repository
+    Properties:
+      Description: "Maven Mirror"
+      DomainName: !GetAtt Domain.Name
+      RepositoryName: "maven-mirror"
+      ExternalConnections:
+        - "public:maven-central"
+  MavenCustomArtifacts:
+    Type: AWS::CodeArtifact::Repository
+    Properties:
+      Description: "Repository for in-house artifacts"
+      DomainName: !GetAtt Domain.Name
+      RepositoryName: "maven-custom"
+      Upstreams:
+        - !GetAtt MavenMirror.Name
+        - !GetAtt GradlePluginsMirror.Name
+Outputs:
+  MavenMirrorName:
+    Value: !GetAtt MavenMirror.Name
+    Export:
+      Name: "maven-mirror-name"
+  GradlePluginsMirrorName:
+    Value: !GetAtt GradlePluginsMirror.Name
+    Export:
+      Name: "gradle-plugins-mirror-name"
+  CustomArtifactsName:
+    Value: !GetAtt MavenCustomArtifacts.Name
+    Export:
+      Name: "maven-custom-artifacts-name"
