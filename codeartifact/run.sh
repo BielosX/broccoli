@@ -42,7 +42,26 @@ function destroy() {
   delete_stack "${STACK_NAME}"
 }
 
+function gradle_properties() {
+  token=$(aws codeartifact get-authorization-token \
+    --domain broccoli --duration-seconds 43200 | jq -r '.authorizationToken')
+  account_id=$(aws sts get-caller-identity | jq -r '.Account')
+  url="https://broccoli-${account_id}.d.codeartifact.${AWS_REGION}.amazonaws.com/maven/maven-custom/"
+read -r -d '\0' properties << EOM
+repositoryUrl=$url
+repositoryUser=aws
+repositoryPassword=$token
+\0
+EOM
+  if [ -f ~/.gradle/gradle.properties ]; then
+    cp ~/.gradle/gradle.properties ~/.gradle/gradle.properties.backup
+    echo "Created backup of ~/.gradle/gradle.properties as ~/.gradle/gradle.properties.backup"
+  fi
+  echo "$properties" > ~/.gradle/gradle.properties
+}
+
 case "$1" in
   "deploy") deploy ;;
   "destroy") destroy ;;
+  "gradle-properties") gradle_properties ;;
 esac
