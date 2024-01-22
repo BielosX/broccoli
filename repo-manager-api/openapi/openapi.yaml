@@ -1,0 +1,97 @@
+openapi: "3.0.3"
+info:
+  version: "1.0.0"
+  title: "Repo Manager API"
+paths:
+  /repositories/{name}:
+    parameters:
+      - name: name
+        description: "Repository name"
+        in: path
+        required: true
+        schema:
+          type: string
+    get:
+      operationId: getRepositoryByName
+      description: "Returns repository with specified name"
+      responses:
+        '200':
+          $ref: '#/components/responses/GetRepository'
+        '404':
+          description: "Repository with given name not found"
+  /repositories:
+    post:
+      operationId: createNewRepository
+      description: "Create New Repository for specified language"
+      responses:
+        '201':
+          description: "Repository successfully created"
+        '304':
+          description: "Repository already exists"
+        '400':
+          description: "Bad Request"
+    get:
+      operationId: getRepositories
+      description: "Get repositories by specified filters"
+      responses:
+        '200':
+          $ref: '#/components/responses/GetRepositories'
+components:
+  responses:
+    GetRepository:
+      description: "Repository Details"
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Repository'
+    GetRepositories:
+      description: "List of repositories"
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Repositories'
+  schemas:
+    Repository:
+      type: object
+      properties:
+        name:
+          type: string
+        languages:
+          type: array
+          items:
+            type: string
+        stargazers:
+          type: integer
+        watchers:
+          type: integer
+    Repositories:
+      type: object
+      properties:
+        repositories:
+          type: array
+          items:
+            $ref: '#/components/schemas/Repository'
+    Language:
+      type: string
+      enum:
+        - GO
+        - C
+        - PYTHON
+    CreateRepository:
+      type: object
+      required:
+        - name
+        - language
+      properties:
+        name:
+          type: string
+        language:
+          $ref: '#/components/schemas/Language'
+        description:
+          type: string
+        withGitignore:
+          type: boolean
+          default: true
+        withReadme:
+          type: boolean
+          default: true

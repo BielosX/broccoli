@@ -1,0 +1,97 @@
+import org.springframework.boot.gradle.plugin.SpringBootPlugin
+
+plugins {
+    id 'java-library'
+    id 'io.freefair.lombok' version '8.4'
+    id "org.openapi.generator" version "7.2.0"
+    id 'maven-publish'
+    id "org.springframework.boot" version "3.2.2" apply false
+    id "io.spring.dependency-management" version "1.1.4"
+}
+
+dependencyManagement {
+    imports {
+        mavenBom SpringBootPlugin.BOM_COORDINATES
+    }
+}
+
+java {
+    sourceCompatibility 17
+}
+
+def repositoryUrl = property('repositoryUrl').toString()
+def repositoryUser = property('repositoryUser').toString()
+def repositoryPassword = property('repositoryPassword').toString()
+
+repositories {
+    maven {
+        url repositoryUrl
+        credentials {
+            username repositoryUser
+            password repositoryPassword
+        }
+    }
+}
+
+dependencies {
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.data:spring-data-commons'
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
+
+    implementation 'com.fasterxml.jackson.dataformat:jackson-dataformat-yaml'
+    implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310'
+    implementation 'org.openapitools:jackson-databind-nullable:0.2.6'
+    implementation 'com.fasterxml.jackson.core:jackson-databind'
+    implementation 'com.google.code.findbugs:jsr305:3.0.2'
+    implementation 'io.swagger.core.v3:swagger-annotations:2.2.20'
+}
+
+openApiGenerate {
+    generatorName = 'spring'
+    inputSpec = "${projectDir}/openapi/openapi.yaml"
+    outputDir = "${projectDir}/build/generated/openapi"
+    configOptions = [
+            dateLibrary: 'java8',
+            library: 'spring-boot',
+            hideGenerationTimestamp: 'true',
+            useOptional: 'true',
+            useSpringBoot3: 'true',
+            interfaceOnly: 'true',
+            apiPackage: 'org.broccoli.api',
+            modelPackage: 'org.broccoli.model'
+    ]
+    globalProperties = [
+            apis: "",
+            models: "",
+            supportingFiles: ""
+    ]
+}
+
+sourceSets {
+    main {
+        java {
+            srcDir "${projectDir}/build/generated/openapi/src/main"
+        }
+    }
+}
+
+publishing {
+    publications {
+        maven(MavenPublication) {
+            groupId = property('groupId')
+            artifactId = property('artifactId')
+            version = property('version')
+
+            from components.java
+        }
+    }
+    repositories {
+        maven {
+            url repositoryUrl
+            credentials {
+                username repositoryUser
+                password repositoryPassword
+            }
+        }
+    }
+}
