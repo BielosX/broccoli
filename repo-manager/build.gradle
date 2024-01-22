@@ -1,0 +1,49 @@
+plugins {
+    id 'java'
+    id 'org.springframework.boot' version '3.2.2'
+    id 'io.spring.dependency-management' version '1.1.4'
+}
+
+group = 'org.broccoli'
+version = '0.0.1-SNAPSHOT'
+
+java {
+    sourceCompatibility = '17'
+}
+
+configurations {
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
+}
+
+def repositoryUrl = property('repositoryUrl').toString()
+def repositoryUser = property('repositoryUser').toString()
+def repositoryPassword = property('repositoryPassword').toString()
+
+repositories {
+    maven {
+        url repositoryUrl
+        credentials {
+            username repositoryUser
+            password repositoryPassword
+        }
+    }
+}
+
+dependencies {
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    compileOnly 'org.projectlombok:lombok'
+    annotationProcessor 'org.projectlombok:lombok'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    implementation 'org.broccoli:github-client:1.0.0'
+    implementation 'org.broccoli:repo-manager-api:1.0.0'
+
+    implementation 'org.slf4j:slf4j-api:2.0.11'
+    implementation 'org.slf4j:slf4j-reload4j:2.0.11'
+    implementation 'ch.qos.reload4j:reload4j:1.2.25'
+}
+
+tasks.named('test') {
+    useJUnitPlatform()
+}
