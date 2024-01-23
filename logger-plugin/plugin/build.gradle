@@ -1,0 +1,49 @@
+plugins {
+    id 'java-gradle-plugin'
+    id 'groovy'
+    id 'maven-publish'
+}
+
+gradlePlugin {
+    plugins {
+        logger {
+            id = 'broccoli.logger'
+            implementationClass = 'broccoli.LoggerPlugin'
+        }
+    }
+}
+
+def repositoryUrl = property('repositoryUrl').toString()
+def repositoryUser = property('repositoryUser').toString()
+def repositoryPassword = property('repositoryPassword').toString()
+
+repositories {
+    maven {
+        url repositoryUrl
+        credentials {
+            username repositoryUser
+            password repositoryPassword
+        }
+    }
+}
+
+publishing {
+    publications {
+        maven(MavenPublication) {
+            groupId = property('groupId')
+            artifactId = property('artifactId')
+            version = property('version')
+
+            from components.java
+        }
+    }
+    repositories {
+        maven {
+            url repositoryUrl
+            credentials {
+                username repositoryUser
+                password repositoryPassword
+            }
+        }
+    }
+}
