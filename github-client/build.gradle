@@ -5,10 +5,6 @@ plugins {
     id 'maven-publish'
 }
 
-def repositoryUrl = property('repositoryUrl').toString()
-def repositoryUser = property('repositoryUser').toString()
-def repositoryPassword = property('repositoryPassword').toString()
-
 java {
     sourceCompatibility 17
 }

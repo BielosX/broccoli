@@ -18,10 +18,6 @@ configurations {
     }
 }
 
-def repositoryUrl = property('repositoryUrl').toString()
-def repositoryUser = property('repositoryUser').toString()
-def repositoryPassword = property('repositoryPassword').toString()
-
 repositories {
     maven {
         url repositoryUrl
