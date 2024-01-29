@@ -1,0 +1,43 @@
+plugins {
+    id 'java-gradle-plugin'
+    id 'groovy'
+    id 'maven-publish'
+}
+
+repositories {
+    mavenCentral()
+}
+
+gradlePlugin {
+    plugins {
+        javaFeignGenerator {
+            id = 'broccoli.java-feign-generator'
+            implementationClass = 'broccoli.JavaFeignGeneratorPlugin'
+        }
+    }
+}
+
+dependencies {
+    implementation 'org.openapitools:openapi-generator-gradle-plugin:7.2.0'
+}
+
+publishing {
+    publications {
+        maven(MavenPublication) {
+            groupId = property('groupId')
+            artifactId = property('artifactId')
+            version = property('version')
+
+            from components.java
+        }
+    }
+    repositories {
+        maven {
+            url repositoryUrl
+            credentials {
+                username repositoryUser
+                password repositoryPassword
+            }
+        }
+    }
+}

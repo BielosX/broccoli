@@ -1,2 +1,13 @@
+pluginManagement {
+    repositories {
+        maven {
+            url repositoryUrl
+            credentials {
+                username repositoryUser
+                password repositoryPassword
+            }
+        }
+    }
+}
 rootProject.name = 'github-client'
 
