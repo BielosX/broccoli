@@ -13,18 +13,20 @@ interface JavaFeignGeneratorPluginExtension {
 }
 
 class JavaFeignGeneratorPlugin implements Plugin<Project> {
-    private final ClassLoader classLoader = getClass().getClassLoader()
-
     void apply(Project project) {
         def extension = project.extensions.create('javaFeignGenerator',
                 JavaFeignGeneratorPluginExtension)
         def templatesDir = project.layout.buildDirectory.dir('templates').get()
         def copyTemplatesTask = project.tasks.register('copyMustacheTemplates').get()
+        def jarLocation = getClass().getProtectionDomain().getCodeSource().getLocation().getPath()
+        def mustacheFiles = project.zipTree(jarLocation).matching {
+            include('*.mustache')
+        }
         copyTemplatesTask.doFirst {
             project.mkdir(templatesDir)
-            ['model.mustache', 'pojo.mustache'].each {
-                def resource = classLoader.getResourceAsStream(it)
-                templatesDir.file(it).asFile.setBytes(resource.readAllBytes())
+            project.copy {
+                from(mustacheFiles)
+                into(templatesDir)
             }
         }
         def generateTask = project.tasks.register('generateJavaFeignClient', GenerateTask.class)
