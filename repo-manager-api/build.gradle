@@ -7,6 +7,7 @@ plugins {
     id 'maven-publish'
     id "org.springframework.boot" version "3.2.2" apply false
     id "io.spring.dependency-management" version "1.1.4"
+    id 'broccoli.java-spring-server-generator-plugin' version '1.0.0'
 }
 
 dependencyManagement {
@@ -42,25 +43,11 @@ dependencies {
     implementation 'io.swagger.core.v3:swagger-annotations:2.2.20'
 }
 
-openApiGenerate {
-    generatorName = 'spring'
+javaSpringServerGenerator {
     inputSpec = "${projectDir}/openapi/openapi.yaml"
     outputDir = "${projectDir}/build/generated/openapi"
-    configOptions = [
-            dateLibrary: 'java8',
-            library: 'spring-boot',
-            hideGenerationTimestamp: 'true',
-            useOptional: 'true',
-            useSpringBoot3: 'true',
-            interfaceOnly: 'true',
-            apiPackage: 'org.broccoli.api',
-            modelPackage: 'org.broccoli.model'
-    ]
-    globalProperties = [
-            apis: "",
-            models: "",
-            supportingFiles: ""
-    ]
+    apiPackage = "org.broccoli.api"
+    modelPackage = "org.broccoli.model"
 }
 
 sourceSets {
@@ -92,4 +79,4 @@ publishing {
     }
 }
 
-compileJava.dependsOn 'openApiGenerate'
+project.tasks.compileJava.dependsOn project.tasks.javaSpringApiGenerate
