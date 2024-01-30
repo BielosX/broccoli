@@ -77,4 +77,4 @@ publishing {
     }
 }
 
-compileJava.dependsOn 'generateJavaFeignClient'
+project.tasks.compileJava.dependsOn project.tasks.generateJavaFeignClient
