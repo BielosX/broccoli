@@ -1,0 +1,23 @@
+package {{modelPackage}};
+
+import java.util.Map;
+import java.util.Collection;
+import lombok.Value;
+import lombok.AllArgsConstructor;
+
+@Value
+@AllArgsConstructor
+public class ApiResponse<T>{
+
+    int statusCode;
+    Map<String, Collection<String>> headers;
+    T data;
+
+    /**
+     * @param statusCode The status code of HTTP response
+     * @param headers The headers of HTTP response
+     */
+    public ApiResponse(int statusCode, Map<String, Collection<String>> headers) {
+        this(statusCode, headers, null);
+    }
+}

@@ -21,6 +21,7 @@ class JavaFeignGeneratorPlugin implements Plugin<Project> {
         def jarLocation = getClass().getProtectionDomain().getCodeSource().getLocation().getPath()
         def mustacheFiles = project.zipTree(jarLocation).matching {
             include('*.mustache')
+            include('model/*.mustache')
         }
         copyTemplatesTask.doFirst {
             project.mkdir(templatesDir)
@@ -49,10 +50,14 @@ class JavaFeignGeneratorPlugin implements Plugin<Project> {
                     modelPackage: modelPackage,
                     serializationLibrary: 'jackson'
             ])
+            it.supportingFilesConstrainedTo.set([
+                    "ApiResponse.java",
+                    "EncodingUtils.java",
+                    "StringUtil.java"
+            ])
             it.globalProperties.set([
                     apis: "",
-                    models: "",
-                    supportingFiles: ""
+                    models: ""
             ])
         }
     }
