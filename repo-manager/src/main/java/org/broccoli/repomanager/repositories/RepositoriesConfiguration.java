@@ -28,30 +28,25 @@ public class RepositoriesConfiguration {
   @Value("${github.token}")
   private String token;
 
-  @Bean
-  public HttpBearerAuth auth() {
+  private Feign.Builder feignCommon() {
     HttpBearerAuth bearerAuth = new HttpBearerAuth("Bearer");
     bearerAuth.setBearerToken(token);
-    return bearerAuth;
-  }
-
-  @Bean
-  public ReposApi reposApi(HttpBearerAuth auth) {
     return Feign.builder()
             .client(new OkHttpClient())
             .decoder(new JacksonDecoder(MODULES))
             .encoder(new JacksonEncoder(MODULES))
-            .requestInterceptor(auth)
+            .requestInterceptor(bearerAuth);
+  }
+
+  @Bean
+  public ReposApi reposApi() {
+    return feignCommon()
             .target(ReposApi.class, githubUrl);
   }
 
   @Bean
-  public UsersApi usersApi(HttpBearerAuth auth) {
-    return Feign.builder()
-            .client(new OkHttpClient())
-            .decoder(new JacksonDecoder(MODULES))
-            .encoder(new JacksonEncoder(MODULES))
-            .requestInterceptor(auth)
+  public UsersApi usersApi() {
+    return feignCommon()
             .target(UsersApi.class, githubUrl);
   }
 }
