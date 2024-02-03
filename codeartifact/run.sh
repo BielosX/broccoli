@@ -60,8 +60,64 @@ EOM
   echo "$properties" > ~/.gradle/gradle.properties
 }
 
+function purge() {
+  local result
+  local next_repositories_token="null"
+  local first_page=true
+  while [ "${next_repositories_token}" != "null" ] || [ "${first_page}" = true ]; do
+    first_page=false
+    if [ "${next_repositories_token}" != "null" ]; then
+      result=$(aws codeartifact list-repositories-in-domain --domain broccoli --starting-token "${next_repositories_token}")
+    else
+      result=$(aws codeartifact list-repositories-in-domain --domain broccoli)
+    fi
+    local repositories
+    repositories=$(jq -r '.repositories' <<< "$result")
+    local repos_length
+    repos_length=$(jq -r 'length' <<< "$repositories")
+    next_repositories_token=$(jq -r '.nextToken' <<< "$result")
+    if ((repos_length > 0)); then
+      for repo_idx in $(seq 0 $((repos_length-1))); do
+        local repo_name
+        local next_packages_token="null"
+        local first_packages_page=true
+        repo_name=$(jq -r ".[$repo_idx].name" <<< "$repositories")
+        while [ "${next_packages_token}" != "null" ] || [ "${first_packages_page}" = true ]; do
+          first_packages_page=false
+          if [ "${next_packages_token}" != "null" ]; then
+            result=$(aws codeartifact list-packages --domain broccoli --repository "${repo_name}" --starting-token "${next_packages_token}")
+          else
+            result=$(aws codeartifact list-packages --domain broccoli --repository "${repo_name}")
+          fi
+          next_packages_token=$(jq -r '.nextToken' <<< "$result")
+          local packages_length
+          local packages
+          packages=$(jq -r '.packages' <<< "$result")
+          packages_length=$(jq -r 'length' <<< "$packages")
+          if ((packages_length > 0)); then
+            for package_idx in $(seq 0 $((packages_length-1))); do
+              local package_name
+              local package_format
+              package_name=$(jq -r ".[$package_idx].package" <<< "$packages")
+              package_format=$(jq -r ".[$package_idx].format" <<< "$packages")
+              package_namespace=$(jq -r ".[$package_idx].namespace" <<< "$packages")
+              aws codeartifact delete-package \
+                --domain broccoli --repository "${repo_name}" \
+                --package "${package_name}" \
+                --namespace "${package_namespace}" \
+                --format "${package_format}" > /dev/null
+              echo "${package_name} deleted from ${repo_name}"
+            done
+          fi
+        done
+      done
+    fi
+  done
+}
+
 case "$1" in
   "deploy") deploy ;;
   "destroy") destroy ;;
   "gradle-properties") gradle_properties ;;
+  "purge") purge ;;
 esac

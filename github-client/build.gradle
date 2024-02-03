@@ -30,13 +30,13 @@ ext {
 
 dependencies {
     api "io.github.openfeign:feign-core:$feign_version"
-    implementation "io.github.openfeign:feign-jackson:$feign_version"
+    api "io.github.openfeign:feign-jackson:$feign_version"
+    api "io.github.openfeign:feign-okhttp:$feign_version"
+    api "com.fasterxml.jackson.datatype:jackson-datatype-jsr310:$jackson_version"
     implementation "io.github.openfeign:feign-slf4j:$feign_version"
-    implementation "io.github.openfeign:feign-okhttp:$feign_version"
     implementation "io.github.openfeign.form:feign-form:$feign_form_version"
     implementation "com.fasterxml.jackson.core:jackson-core:$jackson_version"
     implementation "com.fasterxml.jackson.core:jackson-annotations:$jackson_version"
-    implementation "com.fasterxml.jackson.datatype:jackson-datatype-jsr310:$jackson_version"
     implementation "jakarta.annotation:jakarta.annotation-api:$jakarta_annotation_version"
     implementation "org.openapitools:jackson-databind-nullable:$jackson_databind_nullable_version"
 }

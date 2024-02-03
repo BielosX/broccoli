@@ -48,12 +48,14 @@ class JavaFeignGeneratorPlugin implements Plugin<Project> {
                     useJakartaEe: 'true',
                     apiPackage: apiPackage,
                     modelPackage: modelPackage,
-                    serializationLibrary: 'jackson'
+                    serializationLibrary: 'jackson',
+                    openApiNullable: ''
             ])
             it.supportingFilesConstrainedTo.set([
                     "ApiResponse.java",
                     "EncodingUtils.java",
-                    "StringUtil.java"
+                    "StringUtil.java",
+                    "HttpBearerAuth.java"
             ])
             it.globalProperties.set([
                     apis: "",
