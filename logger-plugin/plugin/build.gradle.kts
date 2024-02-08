@@ -3,6 +3,7 @@ import java.net.URI
 plugins {
     `java-gradle-plugin`
     `maven-publish`
+    `kotlin-dsl`
     alias(libs.plugins.jvm)
 }
 
