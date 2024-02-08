@@ -17,14 +17,10 @@ repositories {
     mavenCentral()
 }
 
-dependencies {
-    implementation("org.openapitools:openapi-generator-gradle-plugin:7.2.0")
-}
-
 gradlePlugin {
-    val javaSpringServerGenerator by plugins.creating {
-        id = "broccoli.${rootProject.name}"
-        implementationClass = "broccoli.JavaSpringServerGeneratorPlugin"
+    val logger by plugins.creating {
+        id = "broccoli.logger-plugin"
+        implementationClass = "broccoli.LoggerPlugin"
         isAutomatedPublishing = false
     }
 }
