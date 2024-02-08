@@ -22,21 +22,10 @@ gradlePlugin {
     val logger by plugins.creating {
         id = "broccoli.logger-plugin"
         implementationClass = "broccoli.LoggerPlugin"
-        isAutomatedPublishing = false
     }
 }
 
 publishing {
-    publications {
-        create<MavenPublication>("gradlePlugin") {
-            groupId = project.group.toString()
-            artifactId = rootProject.name
-            version = project.version.toString()
-
-            from(components["java"])
-        }
-    }
-
     repositories {
         maven {
             url = URI.create(repositoryUrl.toString())

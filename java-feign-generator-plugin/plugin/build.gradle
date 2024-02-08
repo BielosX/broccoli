@@ -18,7 +18,6 @@ gradlePlugin {
             implementationClass = 'broccoli.JavaFeignGeneratorPlugin'
         }
     }
-    automatedPublishing = false
 }
 
 dependencies {
@@ -26,15 +25,6 @@ dependencies {
 }
 
 publishing {
-    publications {
-        maven(MavenPublication) {
-            groupId = "${project.group}"
-            artifactId = "${rootProject.name}"
-            version = "${project.version}"
-
-            from components.java
-        }
-    }
     repositories {
         maven {
             url repositoryUrl
