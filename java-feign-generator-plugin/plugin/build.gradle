@@ -8,6 +8,9 @@ repositories {
     mavenCentral()
 }
 
+group = 'broccoli'
+version = '1.0.0'
+
 gradlePlugin {
     plugins {
         javaFeignGenerator {
@@ -15,6 +18,7 @@ gradlePlugin {
             implementationClass = 'broccoli.JavaFeignGeneratorPlugin'
         }
     }
+    automatedPublishing = false
 }
 
 dependencies {
@@ -24,9 +28,9 @@ dependencies {
 publishing {
     publications {
         maven(MavenPublication) {
-            groupId = property('groupId')
-            artifactId = property('artifactId')
-            version = property('version')
+            groupId = "${project.group}"
+            artifactId = "${rootProject.name}"
+            version = "${project.version}"
 
             from components.java
         }
