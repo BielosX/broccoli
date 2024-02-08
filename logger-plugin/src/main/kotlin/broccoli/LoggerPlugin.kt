@@ -15,7 +15,7 @@ class LoggerPlugin: Plugin<Project> {
         project.resources.text.fromString(log4jProps.toString())
         project.dependencies {
             "implementation"("org.slf4j:slf4j-api:${SLF4J_API_VERSION}")
-            "implementation"("rg.slf4j:slf4j-reload4j:${SLF4J_RELOAD4J_VERSION}")
+            "implementation"("org.slf4j:slf4j-reload4j:${SLF4J_RELOAD4J_VERSION}")
         }
         project.configurations.forEach {
             it.exclude(group = "ch.qos.logback", module = "logback-classic")
