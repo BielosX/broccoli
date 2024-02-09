@@ -2,7 +2,9 @@ package broccoli
 
 import org.gradle.api.Plugin
 import org.gradle.api.Project
+import org.gradle.api.tasks.Copy
 import org.gradle.kotlin.dsl.*
+import org.gradle.language.jvm.tasks.ProcessResources
 
 class LoggerPlugin: Plugin<Project> {
     companion object {
@@ -12,7 +14,17 @@ class LoggerPlugin: Plugin<Project> {
     }
     override fun apply(project: Project) {
         val log4jProps = javaClass.classLoader.getResourceAsStream(LOG4J_PROPERTIES_FILE)?.readAllBytes()
-        project.resources.text.fromString(log4jProps.toString())
+        val resource = project.resources.text.fromString(String(bytes = log4jProps!!))
+        println(resource.asString())
+        val copyLog4jProperties by project.tasks.registering(Copy::class) {
+            from(resource) {
+                rename { LOG4J_PROPERTIES_FILE }
+            }
+            into(project.layout.buildDirectory.dir("resources/main"))
+        }
+        project.tasks.withType(ProcessResources::class.java) {
+            dependsOn(copyLog4jProperties)
+        }
         project.dependencies {
             "implementation"("org.slf4j:slf4j-api:${SLF4J_API_VERSION}")
             "implementation"("org.slf4j:slf4j-reload4j:${SLF4J_RELOAD4J_VERSION}")
