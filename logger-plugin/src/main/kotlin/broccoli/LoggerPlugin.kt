@@ -15,7 +15,6 @@ class LoggerPlugin: Plugin<Project> {
     override fun apply(project: Project) {
         val log4jProps = javaClass.classLoader.getResourceAsStream(LOG4J_PROPERTIES_FILE)?.readAllBytes()
         val resource = project.resources.text.fromString(String(bytes = log4jProps!!))
-        println(resource.asString())
         val copyLog4jProperties by project.tasks.registering(Copy::class) {
             from(resource) {
                 rename { LOG4J_PROPERTIES_FILE }
