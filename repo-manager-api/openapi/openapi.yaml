@@ -23,6 +23,11 @@ paths:
     post:
       operationId: createNewRepository
       description: "Create New Repository for specified language"
+      requestBody:
+        content:
+          'application/json':
+            schema:
+              $ref: '#/components/schemas/CreateRepository'
       responses:
         '201':
           description: "Repository successfully created"
@@ -33,10 +38,40 @@ paths:
     get:
       operationId: getRepositories
       description: "Get repositories by specified filters"
+      parameters:
+        - $ref: '#/components/parameters/LanguageQuery'
+        - $ref: '#/components/parameters/StargazersGreaterThan'
+        - $ref: '#/components/parameters/WatchersGreaterThan'
       responses:
         '200':
           $ref: '#/components/responses/GetRepositories'
 components:
+  parameters:
+    LanguageQuery:
+      description: "Language used in project"
+      name: language
+      in: query
+      required: false
+      style: form
+      explode: true
+      schema:
+        type: array
+        items:
+          type: string
+    StargazersGreaterThan:
+      description: "Repositories with more than specified number of stargazers"
+      name: stargazersGreaterThan
+      in: query
+      required: false
+      schema:
+        type: integer
+    WatchersGreaterThan:
+      description: "Repositories with more than specified number of watchers"
+      name: watchersGreaterThan
+      in: query
+      required: false
+      schema:
+        type: integer
   responses:
     GetRepository:
       description: "Repository Details"
