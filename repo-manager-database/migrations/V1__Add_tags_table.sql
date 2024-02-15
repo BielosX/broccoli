@@ -1,0 +1,4 @@
+CREATE TABLE tags (
+    id SERIAL,
+    tag VARCHAR(255) NOT NULL
+);
