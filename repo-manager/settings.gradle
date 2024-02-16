@@ -11,3 +11,6 @@ pluginManagement {
 }
 
 rootProject.name = 'repo-manager'
+include('application')
+include('database')
+include('api')

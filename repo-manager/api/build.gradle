@@ -16,20 +16,6 @@ dependencyManagement {
     }
 }
 
-java {
-    sourceCompatibility 17
-}
-
-repositories {
-    maven {
-        url repositoryUrl
-        credentials {
-            username repositoryUser
-            password repositoryPassword
-        }
-    }
-}
-
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.data:spring-data-commons'
@@ -53,27 +39,6 @@ sourceSets {
     main {
         java {
             srcDir "${projectDir}/build/generated/openapi/src/main"
-        }
-    }
-}
-
-publishing {
-    publications {
-        maven(MavenPublication) {
-            groupId = property('groupId')
-            artifactId = property('artifactId')
-            version = property('version')
-
-            from components.java
-        }
-    }
-    repositories {
-        maven {
-            url repositoryUrl
-            credentials {
-                username repositoryUser
-                password repositoryPassword
-            }
         }
     }
 }
