@@ -3,6 +3,7 @@ plugins {
     id 'org.springframework.boot' version '3.2.2'
     id 'io.spring.dependency-management' version '1.1.4'
     id 'broccoli.logger-plugin' version '1.0.0'
+    id 'com.bmuschko.docker-spring-boot-application' version '9.4.0'
 }
 
 configurations {
@@ -20,6 +21,15 @@ dependencies {
 
     implementation project(':api')
     implementation project(':database')
+}
+
+def imageNamePrefix = project.findProperty("imageNamePrefix") ?: ""
+
+docker {
+    springBootApplication {
+        baseImage = 'openjdk:17-alpine'
+        images = ["${imageNamePrefix}${rootProject.name}:${rootProject.version}"]
+    }
 }
 
 tasks.named('test') {
