@@ -13,6 +13,7 @@ import org.jooq.meta.jaxb.*
 import org.jooq.meta.jaxb.Target
 import org.postgresql.ds.PGSimpleDataSource
 import org.testcontainers.containers.PostgreSQLContainer
+import org.testcontainers.utility.DockerImageName
 
 abstract class JooqPostgresGenerateTask: DefaultTask() {
     @get:Input
@@ -34,7 +35,7 @@ abstract class JooqPostgresGenerateTask: DefaultTask() {
             it.fileType != FileType.DIRECTORY
         }.size
         if (changedFiles > 0) {
-            val postgresImage = "${postgresVersion.get()}-alpine"
+            val postgresImage = DockerImageName.parse("postgres:${postgresVersion.get()}-alpine")
             val postgresContainer = PostgreSQLContainer(postgresImage)
             postgresContainer.withTmpFs(
                 mapOf(
@@ -48,10 +49,12 @@ abstract class JooqPostgresGenerateTask: DefaultTask() {
             dataSource.databaseName = postgresContainer.databaseName
             dataSource.serverNames = arrayOf(postgresContainer.host)
             dataSource.portNumbers = intArrayOf(postgresContainer.getMappedPort(PostgreSQLContainer.POSTGRESQL_PORT))
+            val migrationsLocation = "filesystem:${migrationSql.get().asFile.path}"
+            println("Using migrations located at $migrationsLocation")
             val flyway = Flyway.configure()
                 .connectRetries(10)
                 .connectRetriesInterval(30)
-                .locations(migrationSql.get().asFile.path)
+                .locations(migrationsLocation)
                 .dataSource(dataSource)
                 .load()
             flyway.migrate()

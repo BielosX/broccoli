@@ -8,7 +8,7 @@ plugins {
 
 configure<JooqPostgresGeneratorPluginExtension> {
     packageName = "broccoli.jooq"
-    outputDirectory = "${projectDir}/build/jooqGenerated"
-    flywaySqlDirectory = "${projectDir}/migrations"
+    outputDirectory = project.layout.buildDirectory.dir("jooqGenerated")
+    flywaySqlDirectory = project.layout.projectDirectory.dir("migrations")
     postgresVersion = "16.2"
 }
