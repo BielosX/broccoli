@@ -19,19 +19,21 @@ public class RepositoriesApiController implements RepositoriesApi {
   private final RepositoriesService repositoriesService;
 
   @Override
-  public ResponseEntity<Void> createNewRepository(Optional<CreateRepository> createRepository) {
+  public ResponseEntity<Void> createNewRepository(final Optional<CreateRepository> createRepository) {
     return RepositoriesApi.super.createNewRepository(createRepository);
   }
 
   @Override
-  public ResponseEntity<Repositories> getRepositories(Optional<List<String>> language, Optional<Integer> stargazersGreaterThan, Optional<Integer> watchersGreaterThan) {
+  public ResponseEntity<Repositories> getRepositories(final Optional<List<String>> language,
+                                                      final Optional<Integer> stargazersGreaterThan,
+                                                      final Optional<Integer> watchersGreaterThan) {
     return RepositoriesApi.super.getRepositories(language, stargazersGreaterThan, watchersGreaterThan);
   }
 
   @Override
-  public ResponseEntity<Repository> getRepositoryByName(String name) {
+  public ResponseEntity<Repository> getRepositoryByName(final String name) {
     log.info("getRepositoryByName");
-    Repository repository = repositoriesService.getRepository(name);
+    final Repository repository = repositoriesService.getRepository(name);
     return ResponseEntity.ok(repository);
   }
 }

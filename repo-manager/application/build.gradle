@@ -19,6 +19,7 @@ dependencies {
     annotationProcessor 'org.projectlombok:lombok'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     implementation 'org.broccoli:github-client:1.0.0'
+    testImplementation "org.assertj:assertj-core:3.11.1"
 
     implementation project(':api')
     implementation project(':database')

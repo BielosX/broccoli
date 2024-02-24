@@ -13,9 +13,9 @@ public class RepositoriesService {
   private final ReposApi reposApi;
   private final UsersApi usersApi;
 
-  public Repository getRepository(String repoName) {
-    String userName = usersApi.usersGetAuthenticated().getLogin();
-    FullRepository response = reposApi.reposGet(userName, repoName);
+  public Repository getRepository(final String repoName) {
+    final String userName = usersApi.usersGetAuthenticated().getLogin();
+    final FullRepository response = reposApi.reposGet(userName, repoName);
     return Repository.builder()
             .name(response.getName())
             .stargazers(response.getStargazersCount())

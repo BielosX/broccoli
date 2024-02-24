@@ -29,7 +29,7 @@ public class RepositoriesConfiguration {
   private String token;
 
   private Feign.Builder feignCommon() {
-    HttpBearerAuth bearerAuth = new HttpBearerAuth("Bearer");
+    final HttpBearerAuth bearerAuth = new HttpBearerAuth("Bearer");
     bearerAuth.setBearerToken(token);
     return Feign.builder()
             .client(new OkHttpClient())
