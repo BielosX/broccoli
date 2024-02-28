@@ -12,7 +12,6 @@ class JavaPmdPlugin: Plugin<Project> {
         val rules = project.resources.text.fromString(resource)
         project.extensions.configure(PmdExtension::class.java) {
             ruleSetFiles(rules)
-            rulesMinimumPriority.set(4)
         }
     }
 }

@@ -8,7 +8,9 @@
     <rule ref="category/java/bestpractices.xml" />
     <rule ref="category/java/errorprone.xml" />
     <rule ref="category/java/codestyle.xml" />
-    <rule ref="category/java/design.xml" />
+    <rule ref="category/java/design.xml">
+        <exclude name="LawOfDemeter" />
+    </rule>
     <rule ref="category/java/codestyle.xml/LongVariable">
         <properties>
             <property name="minimum" value="30" />
@@ -23,8 +25,5 @@
         <properties>
             <property name="ignoredAnnotations" value="org.springframework.boot.autoconfigure.SpringBootApplication" />
         </properties>
-    </rule>
-    <rule ref="category/java/design.xml/LawOfDemeter">
-        <priority>5</priority>
     </rule>
 </ruleset>
